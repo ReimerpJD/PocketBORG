@@ -1,0 +1,19 @@
+{
+  "name": "pocketborg",
+  "version": "0.1.0",
+  "description": "A modular, file-based app for project management",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReimerpJD/PocketBORG.git"
+  },
+  "author": "CJ Macbeth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ReimerpJD/PocketBORG/issues"
+  },
+  "homepage": "https://github.com/ReimerpJD/PocketBORG#readme"
+}
