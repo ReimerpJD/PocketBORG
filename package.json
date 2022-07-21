@@ -4,16 +4,19 @@
   "description": "A modular, file-based app for project management",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ReimerpJD/PocketBORG.git"
   },
   "author": "CJ Macbeth",
-  "license": "ISC",
+  "license": "GPL3",
   "bugs": {
     "url": "https://github.com/ReimerpJD/PocketBORG/issues"
   },
-  "homepage": "https://github.com/ReimerpJD/PocketBORG#readme"
+  "homepage": "https://github.com/ReimerpJD/PocketBORG#readme",
+  "devDependencies": {
+    "electron": "^19.0.8"
+  }
 }

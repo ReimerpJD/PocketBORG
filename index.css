@@ -1,0 +1,60 @@
+@font-face{
+	font-family: FontA;
+	src: url(fonts/FreeSans.woff);
+}
+body{
+	font-family: FontA;
+	margin:0;
+}
+#Drag{
+	
+}
+#ActionPanel{
+	user-select:none;
+	font-size:.75rem;
+	width:20em;
+	height:100vh;
+	background:#EEE;
+}
+.Action{
+	width:19.5em;
+	background:linear-gradient(#836, #836 90%, #725);
+	padding:.25em;
+}
+.Action.Button:hover{
+	color:#503;
+	background:white;
+}
+.Action.Button:hover .Action-Name{
+	color:#503;
+}
+.Action.Button:hover .Action-Keybind-Key{
+	color:#725;
+}
+.Action.Button:hover .Action-Description{
+	color:#614;
+}
+.Action-Symbol{
+	display:inline-block;
+	height:1em;
+}
+.Action-Name{
+	display:inline-block;
+	padding:.25em;
+	color:white;
+}
+.Action-Keybind{
+	display:inline-block;
+	float:right;
+	padding:.25em;
+}
+.Action-Keybind-Key{
+	display:inline-block;
+	margin-left:.5em;
+	color:#CCC;
+}
+.Action-Description{
+	padding:.25em;
+	padding-top:0;
+	color:#DDD;
+}
