@@ -1,4 +1,4 @@
-function MGUI(Element){
+﻿function MGUI(Element){
 	this.Element=Element;
 	this.States={};
 	this.Actions={};
@@ -6,7 +6,7 @@ function MGUI(Element){
 	this.Locked=[];
 }
 MGUI.prototype.Draw=function(){
-	this.Element.innerHTML='';
+	this.Element.innerHTML='<div id="Drag" class="Action"><div class="Action-Name" style="-webkit-app-region:drag">⮻</div><div class="Action-Name" onclick="window.close()" style="float:right">✕</div></div>';
 	for(let i=0,l=this.Active.length;i<l;i++)this.Element.appendChild(this.Active[i].Draw());
 }
 
@@ -57,26 +57,34 @@ MGUI.prototype.UnloadAction=function(Action,Force){
 }
 
 MGUI.prototype.CreateState=function(Name){
-	if(!(Name in this.States))this.States[Name]=[];
+	if(!(Name in this.States))this.States[Name]={};
 }
-MGUI.prototype.StateAction=function(State,Action){
-	if(this.States[State]&&!this.State.includes(Action))this.States[State].push(Action);
+MGUI.prototype.StateAction=function(State,Name,Action){
+	if(State in this.States&&!(Name in this.States[State]))this.States[State][Name]=Action;
 }
 MGUI.prototype.RemoveState=function(State){
 	delete this.States[State];
 }
 MGUI.prototype.LoadState=function(State){
-	for(let i=0,l=this.States[State].length;i<l;i++)this.LoadAction(this.States[State]);
+	for(let i=0,o=Object.keys(this.States[State]),l=o.length;i<l;i++)this.LoadAction(this.States[State][o[i]]);
 	this.Draw();
 }
 MGUI.prototype.UnloadState=function(State){
-	for(let i=0,l=this.States[State].length;i<l;i++)this.UnloadAction(this.States[State]);
+	for(let i=0,o=Object.keys(this.States[State]),l=o.length;i<l;i++)this.UnloadAction(this.States[State][o[i]]);
 	this.Draw();
 }
-
 MGUI.prototype.Lock=function(Action){
-	if(!this.Active.includes(Action))return;
 	if(!this.Locked.includes(Action))this.Locked.push(Action);
+}
+MGUI.prototype.Unlock=function(Action){
+	if(this.Locked.includes(Action))this.Locked=this.Locked.filter(E=>E!=Action);
+}
+MGUI.prototype.LockState=function(State){
+	for(let i=0,o=Object.keys(this.States[State]),l=o.length;i<l;i++)if(!this.Locked.includes(this.States[State][o[i]]))this.Locked.push(this.States[State][o[i]]);
+}
+MGUI.prototype.UnlockState=function(State){
+	let Actions=Object.values(this.States[State]);
+	this.Locked=this.Locked.filter(E=>!Actions.includes(E));
 }
 MGUI.prototype.Elements={}
 // check inputs (strings, Actions, ...)

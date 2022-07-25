@@ -1,18 +1,17 @@
 const path=require('path');
 const fs=require('fs');
-const V=require(path.join(__dirname,'Validators'));
 const BORG=require(path.join(__dirname,'BORG'));
 let b=new BORG('Document Creator');
 function FtD(Raw){
 	let Data;
 	try{Data=JSON.parse(Data)}catch{Data={}}
-	if(typeof Data.Meta=='object'&&Data.Meta!==null)this.Meta=Data.Meta;
-	else this.Meta={};
+	if(typeof Data.Metadata=='object'&&Data.Metadata!==null)this.Metadata=Data.Metadata;
+	else this.Metadata=new this.Meta(this,{Title:'The Art of War',Descritpion:'An overview of The Art of War by Sun Tzu',Authors:'CJ Macbeth',Signatures:'Ian Archibald',Variables:{Notes:['Show','Hide'],Text:['Show','Hide','Footnotes']}});
 	if(Array.isArray(Data.Data))this.Data=Data.Data;
-	else this.Data={}[];
+	else this.Data=[new this.Types.Section(this,{Text:'Contents',Layer:2}),new this.Types.Step(this,{Title:'Chapters',Text:['000Laying Plans','zzz','000Waging War']}),new this.Types.Section(this,{Layer:3}),new this.Types.Section(this,{Text:'Laying Plans',Layer:1})];
 }
 function DtF(){
-	return JSON.stringify({Meta:this.Meta,Data:this.Data});
+	return JSON.stringify({Metadata:this.Metadata,Data:this.Data});
 }
 function StringV(S){
 	if(typeof S!='string')throw false;
@@ -103,6 +102,7 @@ function DrawMeta(){
 	return html;
 }
 function DrawStep(Num){
+	Num[2]++;
 	let html=`<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element">`;
 	if(this.Options.Title.Value)html+=`<tr><td class="Element-Cell" colspan="2"><div class="Element-Step-Title">${this.Title.Value}</div></td></tr>`;
 	if(this.Options.Text.Value||this.Options.Image.Value){
@@ -125,15 +125,18 @@ function DrawStep(Num){
 		}
 		html+='</table></td></tr>';
 	}
-	
+	return html;
 }
 function DrawSection(Num){
 	switch(this.Options.Layer.Value){
 		case 3:
+			Num[0]++;
 			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Section"></div></td></tr></table></div>`;
 		case 2:
+			Num[1]++;
 			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Subsection"></div></td></tr></table></div>`;
 		default:
+			Num[2]++;
 			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><div class="Element-Break"></div></div>`;
 	}
 }
@@ -148,11 +151,17 @@ b.Input('Conditions',Conditions);
 b.Input('Variables',Variables);
 b.Input('Level',Level);
 
-b.Type({Title:'String',Description:'Text',Authors:'String Array',Signatures:'String Array',Variables:'Variables'},['Title'],null,()=>{}); // draw func
-b.Type({Title:'String',Text:'Text',Image:'String',Footnote:'String',Table:'Table',Conditions:'Conditions'},[],'Step',()=>{}); // draw func
-b.Type({Text:'Section',Type:'Level'},['Level'],'Step',()=>{}); // draw func
+b.Type({Title:'String',Description:'Text',Authors:'String Array',Signatures:'String Array',Variables:'Variables'},['Title'],null,DrawMeta); // draw func
+b.Type({Title:'String',Text:'Text',Image:'String',Footnote:'String',Table:'Table',Conditions:'Conditions'},[],'Step',DrawStep); // draw func
+b.Type({Text:'String',Layer:'Level'},['Layer'],'Section',DrawSection); // draw func
 
-b.Draw(()=>{}); // draw func
+b.Draw(Editing=>{
+	let html='';
+	html+=this.Metadata.Draw(Editing);
+	let Nums=[0,0,0];
+	for(let i=0,l=this.Data.length;i<l;i++)html+=this.Data[i].Draw(Nums);
+	return html;
+}); // draw func
 b.Tool('Name',1); // tools
 b.Tool('OpenImage',(Element)=>{});
 b.Tool('HTMLSanitize',(String)=>{});

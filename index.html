@@ -2,15 +2,14 @@
 <html>
 	<head>
 		<title>PocketBORG</title>
-		<script src="JQuery.js"></script>
+		<script>window.$=window.jQuery=require('./JQuery');</script>
+		<!--<script src="JQuery.js"></script>-->
 		<script src="MGUI.js"></script>
 		<script src="application.js"></script>
 		<link rel="stylesheet" href="index.css" />
 	</head>
 	<body onload="init()">
-		<div id="ActionPanel">
-			<div id="Drag" class="Action"><div class="Action-Name" style="-webkit-app-region:drag">⮻</div><div class="Action-Name" onclick="window.close()" style="float:right">✖</div></div>
-		</div>
+		<div id="ActionPanel"></div>
 		<div id="Workspace"></div>
 	</body>
 </html>

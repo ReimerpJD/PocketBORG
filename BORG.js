@@ -11,23 +11,34 @@ B.prototype.Input=function(Name,Validator,Draw){
 	if(typeof Name!='string')throw new Error('required input [Name] must be a string');
 	if(typeof Validator!='function')throw new Error('required input [Validator] must be a function');
 	if(Draw&&typeof Draw!='function')throw new Error('optional input [Draw] must be a function');
-	this.Mitose.prototype.Input[Name]=function(Parent,Options){this.Mitose.Input.call(Parent,Options)}
+	this.Mitose.prototype.Input[Name]=function(Parent,Options){this.Mitose.Input.call(this,Parent,Options)}
 	this.Mitose.prototype.Input[Name].prototype=Object.create(this.Mitose.prototype.Input.prototype);
 	this.Mitose.prototype.Input[Name].prototype.constructor=this.Mitose.prototype.Input[Name];
 	this.Mitose.prototype.Input[Name].prototype.Name=Name;
 }
 B.prototype.Type=function(Options,Required,Name,Draw){
-	if((typeof Options!='object'||Options===null)||!Options.keys.every(E=>Options[E]in this.Mitose.prototype.Input))throw new Error('required input [Options] must be an object containing unique names (keys) and strings (values) referencing registered Inputs');
+	if((typeof Options!='object'||Options===null)||!Object.keys(Options).every(E=>Options[E]in this.Mitose.prototype.Input))throw new Error('required input [Options] must be an object containing unique names (keys) and strings (values) referencing registered Inputs');
 	if(!Array.isArray(Required)||!Required.every(E=>E in Options))throw new Error('required input [Required] must be an array containing the names of keys in the [Options] input (it can be an empty array)');
 	if(Draw&&typeof Draw!='function')throw new Error('optional input [Draw] must be a function');
-	let Type=Name?this.Mitose.prototype.Type[Name]:this.Mitose.prototype.Meta;
-	Type=function(Parent,Options){this.Mitose.Type.call(Parent,Options)}
-	Type.prototype=Object.create(this.Mitose.prototype.Type.prototype);
-	Type.prototype.constructor=this.Mitose.prototype.Type[Name];
-	if(Name)Type.prototype.Name=Name;
-	Type.prototype.Required=Required;
-	if(Draw)Type.prototype.Draw=Draw;
-	for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)Type.prototype.Inputs[o[i]]=this.Mitose.prototype.Input[o[i]];
+	if(Name){
+		this.Mitose.prototype.Type[Name]=function(Parent,Options){Parent.Type.call(this,Parent,Options)}
+		this.Mitose.prototype.Type[Name].prototype=Object.create(this.Mitose.prototype.Type.prototype);
+		this.Mitose.prototype.Type[Name].prototype.constructor=this.Mitose.prototype.Type[Name];
+		this.Mitose.prototype.Type[Name].prototype.Name=Name;
+		this.Mitose.prototype.Type[Name].prototype.Required=Required;
+		if(Draw)this.Mitose.prototype.Type[Name].prototype.Draw=Draw;
+		for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)this.Mitose.prototype.Type[Name].prototype.Inputs[o[i]]=this.Mitose.prototype.Input[o[i]];
+	}else{
+		this.Mitose.prototype.Meta=function(Parent,Options){Parent.Type.call(this,Parent,Options)}
+		this.Mitose.prototype.Meta.prototype=Object.create(this.Mitose.prototype.Type.prototype);
+		this.Mitose.prototype.Meta.prototype.constructor=this.Mitose.prototype.Meta;
+		this.Mitose.prototype.Meta.prototype.Required=Required;
+		if(Draw)this.Mitose.prototype.Meta.prototype.Draw=Draw;
+		console.log(this.Mitose.prototype.Meta.prototype);
+		console.log(Options,Required);
+		for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)this.Mitose.prototype.Meta.prototype.Inputs[o[i]]=this.Mitose.prototype.Input[o[i]];
+		console.log(this.Mitose.prototype.Meta.prototype);
+	}
 }
 B.prototype.Draw=function(Function){
 	if(typeof Function!='function')throw new Error('required input [Function] must be a function');
@@ -43,6 +54,8 @@ B.prototype.CSS=function(CSS){
 B.prototype.Mitose=function(API,Path){
 	this.API=API;
 	if(Path)this.Path=Path;
+	this.Metadata=new this.Meta(this);
+	this.Data=[]
 }
 B.prototype.Mitose.prototype.Add=function(Type,Options,Index){
 	if(!Number.isInteger(Index)||Index>this.Data.length)Index=Data.length;
@@ -72,7 +85,8 @@ B.prototype.Mitose.prototype.Input.prototype.Update=function(Value){
 B.prototype.Mitose.prototype.Input.prototype.Value=null;
 B.prototype.Mitose.prototype.Type=function(Parent,Options){
 	this.Parent=Parent;
-	for(let i=0,o=Object.keys(this.Inputs),l=o.length;i<l;i++)this.Options[o[i]]=new this.Inputs[o[i]](this,o[i]in Options?Options[o[i]]:null);
+	let Ops=typeof Options=='object'&&Options!==null;
+	for(let i=0,o=Object.keys(this.Inputs),l=o.length;i<l;i++)this.Options[o[i]]=new this.Inputs[o[i]](this,Ops&&o[i]in Options?Options[o[i]]:null);
 }
 B.prototype.Mitose.prototype.Type.prototype.Update=function(Options){
 	for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)this.Options[o[i]].Update(Options[o[i]]);
