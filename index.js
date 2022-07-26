@@ -12,7 +12,8 @@ function PocketBORG(Module,File){
 	if(fs.existsSync(electron.app.getPath('userData')))try{configuration=JSON.parse(fs.readFileSync(electron.app.getPath('userData')))}catch{return false}
 }*/
 PocketBORG.prototype.NewWindow=function(Module,File){
-	let window=new electron.BrowserWindow({frame:false,webPreferences:{nodeIntegration:true,contextIsolation:false,enableRemoteModule:true,/*,preload:path.join(__dirname,'pocket.js')*/}});
+	let window=new electron.BrowserWindow({webPreferences:{nodeIntegration:true,contextIsolation:false,enableRemoteModule:true,/*,preload:path.join(__dirname,'pocket.js')*/}});
+	window.setMenuBarVisibility(false)
 	window.loadFile('index.html');
 	this.Windows.push(window);
 }

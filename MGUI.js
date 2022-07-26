@@ -6,7 +6,7 @@
 	this.Locked=[];
 }
 MGUI.prototype.Draw=function(){
-	this.Element.innerHTML='<div id="Drag" class="Action"><div class="Action-Name" style="-webkit-app-region:drag">⮻</div><div class="Action-Name" onclick="window.close()" style="float:right">✕</div></div>';
+	this.Element.innerHTML='';//'<div id="Drag" class="Action"><div class="Action-Name" style="-webkit-app-region:drag">⮻</div><div class="Action-Name" onclick="window.close()" style="float:right">✕</div></div>';
 	for(let i=0,l=this.Active.length;i<l;i++)this.Element.appendChild(this.Active[i].Draw());
 }
 

@@ -2,6 +2,7 @@
 	font-family: FontA;
 	src: url(fonts/FreeSans.woff);
 }
+
 body{
 	font-family: FontA;
 	margin:0;
@@ -12,9 +13,13 @@ body{
 #ActionPanel{
 	user-select:none;
 	font-size:.75rem;
-	width:20em;
+	width:15rem;
 	height:100vh;
-	background:#EEE;
+	background:#EFEAEF;
+	position:fixed;
+	z-index:1;
+	top:0;
+	left:0;
 }
 .Action{
 	width:19.5em;
@@ -57,4 +62,203 @@ body{
 	padding:.25em;
 	padding-top:0;
 	color:#DDD;
+}
+#Workspace{
+	width:calc(100vw - 16rem);
+	position:absolute;
+	top:0;
+	right:0;
+	z-index:0;
+	background:#EEE;
+}
+
+
+
+
+
+
+
+
+
+
+:root{
+	--Theme:#614;
+	--OldTheme:#0e313e;
+}
+
+.Document{
+	position:relative;
+	width:100%;
+	max-width:60rem;
+	background:white;
+	box-shadow:5px 0 10px #aaa;
+	padding-top:1em;
+	padding-bottom:1em;
+}
+.Element-Box{
+	min-height:1em;
+	width:93%;
+	margin:0 auto;
+	padding:.5em;
+}
+.Element-Number{
+	text-align:right;
+	font-size:1em;
+	color:var(--Theme);
+}
+.Element{
+	display:table;
+	table-layout:fixed;
+	width:100%;
+	margin:0 auto;
+	border:0.25em var(--Theme) solid;
+	border-collapse:collapse;
+}
+.Element-Cell{
+	padding:1em;
+	border:0.25em var(--Theme) solid;
+	border-collapse:collapse;
+	vertical-align: top;
+	max-width:100%;
+}
+.Element-Meta-Title{
+	text-align:center;
+	display:block;
+	margin:auto;
+	font-size:2.5em;
+	color:var(--Theme);
+}
+.Element-Meta-Description{
+	text-align:left;
+}
+.Element-Meta-Author{}
+.Element-Meta-Signature{}
+.Element-Meta-Variable{
+	display:table;
+	table-layout:fixed;
+	margin:.5em;
+	width:calc(100% - 1em);
+	vertical-align:top;
+	border: .1em solid var(--Theme);
+	border-collapse:collapse;
+}
+.Element-Meta-Variable-Name{
+	font-size:1em;
+	padding:.5em;
+	text-align:center;
+	background:var(--Theme);
+	color:white;
+}
+.Element-Meta-Variable-Value{
+	border: .1em solid var(--Theme);
+	border-top:none;
+	font-size:1em;
+	padding:.5em;
+	text-align:left;
+	color:var(--Theme);
+	background:#EEE;
+}
+.Element-Step-Title{
+	font-size:1.3em;
+	color:var(--Theme);
+}
+.Element-Text{}
+.Element-Text-Line-Number{
+	float:right;
+	padding-left:.25em;
+}
+.Element-Text-Line{
+	padding:0;
+	margin:0;
+	margin-bottom:.25em;
+}
+.Element-Text-Line_0{}
+.Element-Text-Line_1{font-weight:bold}
+.Element-Text-Line_2{font-style:italic}
+.Element-Text-Line_3{font-weight:bold;font-style:italic;}
+.Element-Text-Line_4{text-decoration:underline;}
+.Element-Text-Line_5{color:white;text-shadow:0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 5px black;}
+.Element-Text-Line_6{font-size:1.5rem;}
+.Element-Text-Line_7{font-size:2rem;}
+.Element-Text-Line_8{font-size:2.5rem;}
+.Element-Text-Line_9{opacity:0.5;}
+.Element-Text-Line_9:hover{opacity:1;}
+.Element-Text-Line_a{}
+.Element-Text-Line_b{}
+.Element-Text-Line_c{}
+.Element-Text-Line_d{}
+.Element-Text-Line_e{}
+.Element-Text-Line_f{}
+.Element-Text-Line_g{}
+.Element-Text-Line_h{}
+.Element-Text-Line_i{}
+.Element-Text-Line_j{}
+.Element-Text-Line_k{}
+.Element-Text-Line_l{}
+.Element-Text-Line_m{}
+.Element-Text-Line_n{}
+.Element-Text-Line_o{}
+.Element-Text-Line_p{}
+.Element-Text-Line_q{}
+.Element-Text-Line_r{}
+.Element-Text-Line_t{}
+.Element-Text-Line_t{}
+.Element-Text-Line_u{}
+.Element-Text-Line_v{}
+.Element-Text-Line_w{}
+.Element-Text-Line_x{}
+.Element-Text-Line_y{}
+.Element-Text-Line_z{background:white;color:var(--Navigation);box-shadow:.25rem .25rem .25rem var(--Navigation);margin:1rem auto;border:0;text-align:center;padding:1rem;}
+.Element-Image{
+	width:100%;
+}
+.Element-Image-Number{
+	color:#666;
+}
+.Element-Image-Footnote{
+	color:#666;
+}
+.Element-Table{
+	table-layout:fixed;
+	margin:1em auto;
+	margin-top:.25em;
+	max-width:60em;
+	border-style:hidden;
+	border-collapse:collapse;
+}
+.Element-Table-Header{
+	font-size:1em;
+	padding:.25em;
+	text-align:center;
+	font-weight:bold;
+	word-break:break-all;
+	height:1em;
+	border:0.125em var(--Theme) dotted;
+	border-left:none;
+	border-right:none;
+	border-collapse:collapse;
+	border-top:none;
+}
+.Element-Table-Cell{
+	font-size:1em;
+	padding:.75em;
+	text-align:center;
+	word-break:break-all;
+	height:1em;
+	border:0.125em var(--Theme) dotted;
+	border-collapse:collapse;
+}
+.Element-Section{
+	color:var(--Theme);
+	font-size:2em;
+}
+.Element-Subsection{
+	color:var(--Theme);
+	font-size:2em;
+}
+.Element-Break{
+	height:.25em;
+	background:var(--Theme);
+	margin:auto;
+	margin-bottom:4em;
 }
