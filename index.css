@@ -58,6 +58,11 @@ body{
 	margin-left:.5em;
 	color:#CCC;
 }
+.Action-Keybind-Control-Key{
+	display:inline-block;
+	margin-left:.5em;
+	color:#CCD;
+}
 .Action-Description{
 	padding:.25em;
 	padding-top:0;

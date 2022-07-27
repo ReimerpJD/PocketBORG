@@ -2,20 +2,6 @@ const path=require('path');
 const fs=require('fs');
 const BORG=require(path.join(__dirname,'BORG'));
 let b=new BORG('Document Creator');
-function FtD(Raw){
-	/*let Data;
-	try{Data=JSON.parse(Data)}catch{Data={}}
-	if(typeof Data.Metadata=='object'&&Data.Metadata!==null)this.Metadata=Data.Metadata;
-	else this.Metadata=new this.Meta(this,{});
-	if(Array.isArray(Data.Data))this.Data=Data.Data;
-	else this.Data=[];*/
-	
-	this.Metadata=new this.Meta(this,{Title:'The Art of War',Description:'An overview of The Art of War by Sun Tzu',Authors:['CJ Macbeth'],Signatures:['Ian Archibald'],Variables:{Notes:['Show','Hide'],Text:['Show','Hide','Footnotes']}});
-	this.Data=[new this.Type.Section(this,{Text:'Contents',Layer:2}),new this.Type.Step(this,{Title:'Chapters',Text:['000Laying Plans','zzz','000Waging War']}),new this.Type.Section(this,{Layer:3}),new this.Type.Section(this,{Text:'Laying Plans',Layer:1})];
-}
-function DtF(){
-	return JSON.stringify({Metadata:this.Metadata,Data:this.Data});
-}
 function StringV(S){
 	if(typeof S!='string')throw false;
 	S=S.trim();
@@ -78,7 +64,7 @@ function Conditions(Value){
 	return Value;
 }
 function Level(L){
-	if(L==1||L==2||L==3)return L;
+	if(L===1||L===2||L===3)return L;
 	else throw false;
 }
 function DrawMeta(){
@@ -152,8 +138,6 @@ function DrawSection(Num){
 			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><div class="Element-Break"></div></div>`;
 	}
 }
-
-b.Store(FtD,DtF);
 
 b.Input('String',StringV);
 b.Input('String Array',SAV);

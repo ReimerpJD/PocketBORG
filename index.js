@@ -7,6 +7,15 @@ var configuration={};
 function PocketBORG(Module,File){
 	this.Windows=[];
 }
+
+
+
+
+const { ipcMain, dialog } = require("electron");
+electron.ipcMain.handle("Files",()=>{
+	electron.dialog.showOpenDialog({properties:['openFile','multiSelections']}).then(R=>{B.Windows[0].webContents.send('Files',R.filePaths)});
+});
+
 /*PocketBORG.prototype.LoadConfiguration=function(File){
 	// FINISH WRITING
 	if(fs.existsSync(electron.app.getPath('userData')))try{configuration=JSON.parse(fs.readFileSync(electron.app.getPath('userData')))}catch{return false}

@@ -4,10 +4,27 @@
 	this.Actions={};
 	this.Active=[];
 	this.Locked=[];
+	this.Keybinds=[{},{},{},{},{},{},{}];
+	document.addEventListener('keyup',Event=>this.Ear(Event));
+}
+MGUI.prototype.Ear=function(Event){
+	let i=0+Event.shiftKey?1:0+Event.altKey?2:0+Event.ctrlKey?4:0;
+	if(Event.key in this.Keybinds[i])this.Keybinds[i][Event.key](Event);
+}
+MGUI.prototype.AddKeybind=function(Keybind,Function){
+	let i=0+Keybind.includes('Shift')?1:0+Keybind.includes('Alt')?2:0+Keybind.includes('Control')?4:0;
+	this.Keybinds[i][Keybind[0]]=Function;
+}
+MGUI.prototype.ClearKeybinds=function(){
+	this.Keybinds=[{},{},{},{},{},{},{}];
 }
 MGUI.prototype.Draw=function(){
 	this.Element.innerHTML='';//'<div id="Drag" class="Action"><div class="Action-Name" style="-webkit-app-region:drag">⮻</div><div class="Action-Name" onclick="window.close()" style="float:right">✕</div></div>';
-	for(let i=0,l=this.Active.length;i<l;i++)this.Element.appendChild(this.Active[i].Draw());
+	this.ClearKeybinds();
+	for(let i=0,l=this.Active.length;i<l;i++){
+		this.Element.appendChild(this.Active[i].Draw());
+		if(this.Active[i].Keybind&&this.Active[i].Function)this.AddKeybind(this.Active[i].Keybind,this.Active[i].Function);
+	}
 }
 
 MGUI.Action=function(Options){
@@ -24,9 +41,8 @@ MGUI.Action.prototype.Draw=function(State){
 	if(this.Name)html+=`<div class="Action-Name">${this.Name}</div>`;
 	if(this.Keybind){
 		html+=`<div class="Action-Keybind">`;
-		for(let i=0,l=this.Keybind.length;i<l;i++)html+=`<div class="Action-Keybind-Key">${this.Keybind[i]}</div>`;
-		html+='</div>';
-		// load keybind into document here?? or later??
+		for(let i=1,l=this.Keybind.length;i<l;i++)html+=`<div class="Action-Keybind-Key Action-Keybind-Control-Key">${this.Keybind[i]}</div>`;
+		html+=`<div class="Action-Keybind-Key">${this.Keybind[0]}</div></div>`;
 	}
 	if(this.Description!==null)html+=`<div class="Action-Description">${this.Description}</>`;
 	// Elements?
@@ -41,8 +57,7 @@ MGUI.Action.prototype.Draw=function(State){
 	return element;
 }
 MGUI.prototype.Clear=function(Force){
-	for(let i=0,l=this.Active.length;i<l;i++)this.UnloadAction(this.Active[i],Force);
-	this.Draw();
+	this.Active.forEach(E=>this.UnloadAction(E,Force));
 }
 
 MGUI.prototype.LoadAction=function(Action,Lock){
@@ -52,7 +67,7 @@ MGUI.prototype.LoadAction=function(Action,Lock){
 }
 MGUI.prototype.UnloadAction=function(Action,Force){
 	if(Force&&this.Locked.includes(Action))this.Locked=this.Locked.filter(E=>E!=Action);
-	if(this.Locked.includes(Action))this.Active=this.Active.filter(E=>E!=Action);
+	if(!this.Locked.includes(Action))this.Active=this.Active.filter(E=>E!=Action);
 	this.Draw();
 }
 

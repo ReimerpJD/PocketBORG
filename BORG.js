@@ -1,8 +1,10 @@
-function B(Name){
+function B(MID,Name,V1,V2,V3){
+	this.MID=MID;
 	this.Name=Name;
-}
-B.prototype.Store=function(Name){
-	// save name and version numbers
+	if(!Number.isInteger(V1))V1=0;
+	if(!Number.isInteger(V2))V2=0;
+	if(!Number.isInteger(V3))V3=0;
+	this.Version=[V1,V2,V3];
 }
 B.prototype.Input=function(Name,Validator,Draw){
 	if(typeof Name!='string')throw new Error('required input [Name] must be a string');
@@ -26,7 +28,6 @@ B.prototype.Type=function(Options,Required,Name,Draw){
 		this.Mitose.prototype.Type[Name].prototype.Name=Name;
 		this.Mitose.prototype.Type[Name].prototype.Required=Required;
 		if(Draw)this.Mitose.prototype.Type[Name].prototype.Draw=Draw;
-		this.Mitose.prototype.Type[Name].prototype.Options={};
 		this.Mitose.prototype.Type[Name].prototype.Inputs={};
 		for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)this.Mitose.prototype.Type[Name].prototype.Inputs[o[i]]=this.Mitose.prototype.Input[Options[o[i]]];
 	}else{
@@ -35,7 +36,6 @@ B.prototype.Type=function(Options,Required,Name,Draw){
 		this.Mitose.prototype.Meta.prototype.constructor=this.Mitose.prototype.Meta;
 		this.Mitose.prototype.Meta.prototype.Required=Required;
 		if(Draw)this.Mitose.prototype.Meta.prototype.Draw=Draw;
-		this.Mitose.prototype.Meta.prototype.Options={};
 		this.Mitose.prototype.Meta.prototype.Inputs={};
 		for(let i=0,o=Object.keys(Options),l=o.length;i<l;i++)this.Mitose.prototype.Meta.prototype.Inputs[o[i]]=this.Mitose.prototype.Input[Options[o[i]]];
 	}
@@ -58,20 +58,25 @@ B.prototype.Mitose=function(API,Path){
 	this.Data=[]
 }
 B.prototype.Mitose.prototype.FtD=function(File){
-	let Data=File.split('\n');
-	// regex Data[0], check correct BORG and module versions
-	try{this.Metadata=new this.Meta(JSON.parse(Data[1]))}catch{this.Metadata={};this.Error=true;} // this.Error, to say the document is in an error state
-	for(let i=2,l=Data.length-2;i<l;i++)try{let d=JSON.parse(Data[i]);this.Data.push(new this.Type[d.Type](d))}catch{this.Error=true;}
+	if(!File){ // remove once finished developing ? maybe leave for fun, and finish AoW doc
+		this.Metadata=new this.Meta(this,{Title:'The Art of War',Description:'An overview of The Art of War by Sun Tzu',Authors:['CJ Macbeth'],Signatures:['Ian Archibald'],Variables:{Notes:['Show','Hide'],Text:['Show','Hide','Footnotes']}});
+		this.Data=[new this.Type.Section(this,{Text:'Contents',Layer:2}),new this.Type.Step(this,{Title:'Chapters',Text:['000Laying Plans','zzz','000Waging War','zzz','000Attack by Stratagem']}),new this.Type.Section(this,{Layer:3}),new this.Type.Section(this,{Text:'Laying Plans',Layer:1})];
+	}else{
+		let Data=File.split('\n');
+		// check matching BORG version and module
+		try{this.Metadata=JSON.parse(Data[1])}catch{this.Metadata={};this.Error=true;} // this.Error, to say the document is in an error state
+		for(let i=2,l=Data.length-2;i<l;i++)try{this.Data.push(JSON.parse(Data[i]))}catch{this.Error=true;}	
+	}
 }
-B.prototype.Mitose.prototype.DtF=function(File){
-	let File=`\n`; // describe BORG and module versions
-	
-	// describe function to take Type instance and return JSON (and it's reverse for FtD)
-	
-	let Data=File.split('\n');
-	// regex Data[0], check correct BORG and module versions
-	try{this.Metadata=JSON.parse(Data[1])}catch{this.Metadata={};this.Error=true;} // this.Error, to say the document is in an error state
-	for(let i=2,l=Data.length-2;i<l;i++)try{this.Data.push(JSON.parse(Data[i]))}catch{this.Error=true;}
+B.prototype.Mitose.prototype.DtF=function(){
+	let File='{}\n'; // remove {}\n once BORG data is being inserted
+	File+=JSON.stringify(this.TtJ(this.Metadata)); // add BORG data before here
+	for(let i=0,l=this.Data.length;i<l;i++)File+=JSON.stringify(this.TtJ(this.Data[i]));
+}
+B.prototype.Mitose.prototype.TtJ=function(Type){
+	let Shell={};
+	for(let i=0,o=Object.keys(Type.Options),l=o.length;i<l;i++)if(Type.Options[o[i]].Value!==null)Shell[o[i]]=Type.Options[o[i]].Value;
+	return Shell;
 }
 B.prototype.Mitose.prototype.Add=function(Type,Options,Index){
 	if(!Number.isInteger(Index)||Index>this.Data.length)Index=Data.length;
@@ -101,6 +106,7 @@ B.prototype.Mitose.prototype.Input.prototype.Update=function(Value){
 B.prototype.Mitose.prototype.Input.prototype.Value=null;
 B.prototype.Mitose.prototype.Type=function(Parent,Options){
 	this.Parent=Parent;
+	this.Options={};
 	let Ops=typeof Options=='object'&&Options!==null;
 	for(let i=0,o=Object.keys(this.Inputs),l=o.length;i<l;i++)this.Options[o[i]]=new this.Inputs[o[i]](this,Ops&&o[i]in Options?Options[o[i]]:null);
 }
