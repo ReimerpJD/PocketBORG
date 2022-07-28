@@ -2,7 +2,9 @@
 	font-family: FontA;
 	src: url(fonts/FreeSans.woff);
 }
-
+#Workspace *:focus{
+	outline:3px dashed #FA08;
+}
 body{
 	font-family: FontA;
 	margin:0;
@@ -25,6 +27,10 @@ body{
 	width:19.5em;
 	background:linear-gradient(#836, #836 90%, #725);
 	padding:.25em;
+}
+.Action:focus{
+	outline:none;
+	background:linear-gradient(#368, #368 90%, #527);
 }
 .Action.Button:hover{
 	color:#503;
@@ -85,7 +91,6 @@ body{
 
 
 
-
 :root{
 	--Theme:#614;
 	--OldTheme:#0e313e;
@@ -105,6 +110,7 @@ body{
 	width:93%;
 	margin:0 auto;
 	padding:.5em;
+	border-radius:.25em;
 }
 .Element-Number{
 	text-align:right;

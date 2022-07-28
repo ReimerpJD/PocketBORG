@@ -1,7 +1,7 @@
 const path=require('path');
 const fs=require('fs');
 const BORG=require(path.join(__dirname,'BORG'));
-let b=new BORG('Document Creator');
+let b=new BORG('31194254-a3f5-4228-8ebd-3269c9cdbd2f','Altek Document Creator',0,0,1);
 function StringV(S){
 	if(typeof S!='string')throw false;
 	S=S.trim();
@@ -68,7 +68,7 @@ function Level(L){
 	else throw false;
 }
 function DrawMeta(){
-	let html='<div class="Element-Box"><div class="Element-Number">0.0.0</div><table class="Element">';
+	let html='<div class="Element-Box" tabindex="0"  role="button" onkeypress="$(this).click();"><div class="Element-Number">0.0.0</div><table class="Element">';
 	if(this.Options.Title.Value)html+=`<tr><td class="Element-Cell"><div class="Element-Meta-Title">${this.Options.Title.Value}</div></td></tr>`;
 	if(this.Options.Description.Value||this.Options.Authors.Value||this.Options.Signatures.Value){
 		html+='<tr><td class="Element-Cell">';
@@ -94,7 +94,7 @@ function DrawMeta(){
 }
 function DrawStep(Num){
 	Num[2]++;
-	let html=`<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element">`;
+	let html=`<div class="Element-Box" tabindex="0"  role="button" onkeypress="$(this).click();"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element">`;
 	if(this.Options.Title.Value)html+=`<tr><td class="Element-Cell" colspan="2"><div class="Element-Step-Title">${this.Options.Title.Value}</div></td></tr>`;
 	if(this.Options.Text.Value||this.Options.Image.Value){
 		html+='<tr>';
@@ -128,14 +128,14 @@ function DrawSection(Num){
 			Num[0]++;
 			Num[1]=0;
 			Num[2]=0;
-			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Section">${this.Options.Text.Value}</div></td></tr></table></div>`;
+			return `<div class="Element-Box" tabindex="0"  role="button" onkeypress="$(this).click();"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Section">${this.Options.Text.Value}</div></td></tr></table></div>`;
 		case 2:
 			Num[1]++;
 			Num[2]=0;
-			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Subsection">${this.Options.Text.Value}</div></td></tr></table></div>`;
+			return `<div class="Element-Box" tabindex="0"  role="button" onkeypress="$(this).click();"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><table class="Element"><tr><td class="Element-Cell"><div class="Element-Subsection">${this.Options.Text.Value}</div></td></tr></table></div>`;
 		default:
 			Num[2]++;
-			return `<div class="Element-Box"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><div class="Element-Break"></div></div>`;
+			return `<div class="Element-Box" tabindex="0"  role="button" onkeypress="$(this).click();"><div class="Element-Number" colspan="2">${Num?`${Num[0]}.${Num[1]}.${Num[2]}`:'?.?.?'}</div><div class="Element-Break"></div></div>`;
 	}
 }
 
@@ -157,7 +157,7 @@ b.Draw(function(Editing){
 	let Nums=[0,0,0];
 	for(let i=0,l=this.Data.length;i<l;i++)html+=this.Data[i].Draw(Nums);
 	return html+'</div>';
-}); // draw func
+});
 b.Tool('Name',1); // tools
 b.Tool('OpenImage',(Element)=>{});
 b.Tool('HTMLSanitize',function(S){

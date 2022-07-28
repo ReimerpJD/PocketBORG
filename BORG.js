@@ -1,11 +1,16 @@
+const Version=[0,0,1];
 function B(MID,Name,V1,V2,V3){
 	this.MID=MID;
 	this.Name=Name;
+	this.Mitose.prototype.MID=MID;
+	this.Mitose.prototype.Name=Name;
 	if(!Number.isInteger(V1))V1=0;
 	if(!Number.isInteger(V2))V2=0;
 	if(!Number.isInteger(V3))V3=0;
 	this.Version=[V1,V2,V3];
+	this.Mitose.prototype.Version=[V1,V2,V3];
 }
+B.prototype.PocketBORG=Version;
 B.prototype.Input=function(Name,Validator,Draw){
 	if(typeof Name!='string')throw new Error('required input [Name] must be a string');
 	if(typeof Validator!='function')throw new Error('required input [Validator] must be a function');
@@ -19,6 +24,7 @@ B.prototype.Input=function(Name,Validator,Draw){
 }
 B.prototype.Type=function(Options,Required,Name,Draw){
 	if((typeof Options!='object'||Options===null)||!Object.keys(Options).every(E=>Options[E]in this.Mitose.prototype.Input))throw new Error('required input [Options] must be an object containing unique names (keys) and strings (values) referencing registered Inputs');
+	if('Type' in Options)throw new Error('required input [Options] cannot contain a property named [Type]');
 	if(!Array.isArray(Required)||!Required.every(E=>E in Options))throw new Error('required input [Required] must be an array containing the names of keys in the [Options] input (it can be an empty array)');
 	if(Draw&&typeof Draw!='function')throw new Error('optional input [Draw] must be a function');
 	if(Name){
@@ -51,31 +57,37 @@ B.prototype.Tool=function(Name,Tool){
 B.prototype.CSS=function(CSS){
 	this.Mitose.prototype.CSS+=CSS;
 }
-B.prototype.Mitose=function(API,Path){
-	this.API=API;
-	if(Path)this.Path=Path;
-	this.Metadata=new this.Meta(this);
-	this.Data=[]
+B.prototype.Mitose=function(Path,File){
+	if(Path)this.File=Path;
+	if(File)this.Open(File);
+	this.Error=false;
 }
-B.prototype.Mitose.prototype.FtD=function(File){
-	if(!File){ // remove once finished developing ? maybe leave for fun, and finish AoW doc
-		this.Metadata=new this.Meta(this,{Title:'The Art of War',Description:'An overview of The Art of War by Sun Tzu',Authors:['CJ Macbeth'],Signatures:['Ian Archibald'],Variables:{Notes:['Show','Hide'],Text:['Show','Hide','Footnotes']}});
-		this.Data=[new this.Type.Section(this,{Text:'Contents',Layer:2}),new this.Type.Step(this,{Title:'Chapters',Text:['000Laying Plans','zzz','000Waging War','zzz','000Attack by Stratagem']}),new this.Type.Section(this,{Layer:3}),new this.Type.Section(this,{Text:'Laying Plans',Layer:1})];
-	}else{
-		let Data=File.split('\n');
-		// check matching BORG version and module
-		try{this.Metadata=JSON.parse(Data[1])}catch{this.Metadata={};this.Error=true;} // this.Error, to say the document is in an error state
-		for(let i=2,l=Data.length-2;i<l;i++)try{this.Data.push(JSON.parse(Data[i]))}catch{this.Error=true;}	
+B.prototype.Mitose.prototype.PocketBORG=Version;
+B.prototype.Mitose.prototype.Open=function(File){
+	try{
+		this.Metadata=new this.Meta(this,File[1]);
+		this.Data=[];
+		for(let i=2,l=File.length;i<l;i++)this.Data.push(new this.Type[File[i].Type](this,File[i]));
+	}catch(e){
+		console.log(e);
+		this.Error=true; // log reason for error?
+		this.Metadata=new this.Meta(this,{});
+		this.Data=[];
 	}
 }
 B.prototype.Mitose.prototype.DtF=function(){
-	let File='{}\n'; // remove {}\n once BORG data is being inserted
-	File+=JSON.stringify(this.TtJ(this.Metadata)); // add BORG data before here
-	for(let i=0,l=this.Data.length;i<l;i++)File+=JSON.stringify(this.TtJ(this.Data[i]));
+	let v=process.env.VERSION.split(',');
+	let File=`{"PocketBORG":[${v[0]},${v[1]},${v[2]}],"Module":"${this.Name}","Version":[${this.Version[0]},${this.Version[1]},${this.Version[2]}],"MID":"${this.MID}"}\n`; // remove {}\n once BORG data is being inserted
+	File+=JSON.stringify(this.TtJ(this.Metadata))+'\n'; // add BORG data before here
+	for(let i=0,l=this.Data.length;i<l;i++)File+=JSON.stringify(this.TtJ(this.Data[i]))+'\n';
+	return File;
 }
 B.prototype.Mitose.prototype.TtJ=function(Type){
 	let Shell={};
-	for(let i=0,o=Object.keys(Type.Options),l=o.length;i<l;i++)if(Type.Options[o[i]].Value!==null)Shell[o[i]]=Type.Options[o[i]].Value;
+	for(let i=0,o=Object.keys(Type.Options),l=o.length;i<l;i++){
+		if(Type.Options[o[i]].Value!==null)Shell[o[i]]=Type.Options[o[i]].Value;
+	}
+	Shell.Type=Type.Name;
 	return Shell;
 }
 B.prototype.Mitose.prototype.Add=function(Type,Options,Index){

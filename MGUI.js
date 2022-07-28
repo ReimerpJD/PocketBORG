@@ -36,7 +36,7 @@ MGUI.Action=function(Options){
 	// Elements?
 }
 MGUI.Action.prototype.Draw=function(State){
-	let html=`<div class="Action">`;
+	let html=`<div class="Action"  tabindex="0"  role="button" onkeypress="if(event.key=='Enter')$(this).click();">`;
 	if(this.Symbol)html+=`<img src="${this.Symbol}" class="Action-Symbol" />`;
 	if(this.Name)html+=`<div class="Action-Name">${this.Name}</div>`;
 	if(this.Keybind){
